@@ -1,0 +1,30 @@
+/* Center the login container and make it 40% of its parent */
+.login-container {
+  width: 40%;
+  margin: 40px auto;
+}
+
+.form-control {
+  border: 2px solid #b1b1b1;
+}
+
+.login-heading {
+    text-align: center;
+    font-size:40px;
+    margin-bottom: 20px;
+    /* text-transform: uppercase; */
+}
+
+.login-logo {
+    display: block;
+    height: 60px; /* Adjust height as needed */
+    margin: 0 auto 20px auto;
+}
+
+.forgot-password-link {
+    text-decoration: none;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}

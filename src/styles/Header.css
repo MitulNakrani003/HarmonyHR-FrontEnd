@@ -1,0 +1,24 @@
+.navbar-brand img {
+    height: 50px;
+}
+.navbar.bg-light {
+    background-color: #e9ecef !important; /* A common, slightly darker grey */
+}
+
+.nav-item {
+    margin: 0 0.35rem; /* Adds distance between tabs */
+    font-size: 18px;
+}
+
+.nav-link {
+    transition: all 0.3s ease-in-out; /* Smooth transition for all effects */
+    padding: 0.5rem 1rem !important;
+    border-radius: 5px;
+}
+
+/* On hover: make font larger and underline */
+.nav-link:hover {
+    transform: scale(1.15);
+    transition-duration: 100ms;
+    transition-behavior: smooth;
+}
