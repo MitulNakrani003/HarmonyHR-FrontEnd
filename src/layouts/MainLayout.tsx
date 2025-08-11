@@ -2,6 +2,7 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Header from '../components/Header';
 import '../styles/MainLayout.css';
 import LoginPage from '../pages/LoginPage';
+import ForgotPassword from '../components/Forgot';
 
 // A placeholder for your main content after login
 function HomePage() {
@@ -10,7 +11,7 @@ function HomePage() {
 
 function MainLayout() {
     const location = useLocation();
-    const showHeader = location.pathname !== '/login';
+    const showHeader = !location.pathname.startsWith('/login');
 
     return (
         <>  
@@ -19,7 +20,7 @@ function MainLayout() {
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/home" element={<HomePage />} />
-                    
+                    <Route path="/login/forgotpassword" element={<ForgotPassword />} />
                     <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
             </main>

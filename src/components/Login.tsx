@@ -33,7 +33,7 @@ function Login() {
                     />
                     <label className="form-check-label" htmlFor="showPasswordCheck">Show Password</label>
                 </div>
-                <Link to="/forgotpassword" className="forgot-password-link">Forgot Password?</Link>
+                <Link to="/login/forgotpassword" className="forgot-password-link">Forgot Password?</Link>
             </div>
             <div className="d-flex gap-2">
                 <button type="submit" className="btn btn-primary w-100">Submit</button>
