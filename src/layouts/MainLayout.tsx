@@ -2,7 +2,8 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Header from '../components/Header';
 import '../styles/MainLayout.css';
 import LoginPage from '../pages/LoginPage';
-import ForgotPassword from '../components/Forgot';
+import ForgotPasswordPage from '../pages/ForgotPasswordPage';
+import RegisterUserPage from '../pages/RegisterUserPage';
 
 // A placeholder for your main content after login
 function HomePage() {
@@ -20,7 +21,8 @@ function MainLayout() {
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/home" element={<HomePage />} />
-                    <Route path="/login/forgotpassword" element={<ForgotPassword />} />
+                    <Route path="/login/register" element={<RegisterUserPage />} />
+                    <Route path="/login/forgotpassword" element={<ForgotPasswordPage />} />
                     <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
             </main>
