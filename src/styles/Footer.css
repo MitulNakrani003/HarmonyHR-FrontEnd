@@ -1,0 +1,8 @@
+.copyright-bar {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Add underline to footer links on hover */
+footer a.text-decoration-none:hover {
+  text-decoration: underline !important;
+}
