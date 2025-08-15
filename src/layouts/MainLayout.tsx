@@ -4,11 +4,7 @@ import '../styles/MainLayout.css';
 import LoginPage from '../pages/LoginPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import RegisterUserPage from '../pages/RegisterUserPage';
-
-// A placeholder for your main content after login
-function HomePage() {
-    return <h2 style={{textAlign: 'center', marginTop: '20px'}}>Welcome to the Dashboard</h2>;
-}
+import HomePage from '../pages/HomePage';
 
 function MainLayout() {
     const location = useLocation();

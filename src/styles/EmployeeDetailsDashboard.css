@@ -1,0 +1,13 @@
+.dashboard-container {
+  width: 70%;
+  margin: 30px auto;
+}
+
+.dashboard-container .card-header,
+.dashboard-container .card-body {
+  padding: 1.2rem 2rem; /* 1.2rem top/bottom, 2.5rem left/right */
+}
+
+.card-title {
+    margin-bottom: 0;
+}

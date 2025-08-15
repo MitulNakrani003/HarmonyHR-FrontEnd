@@ -1,16 +1,24 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useState } from 'react'
 import logo from '../assets/logo.png';
+import AuthService from '../services/auth.service';
 import '../styles/Header.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Header() {
   const [activeLink, setActiveLink] = useState('Home');
 
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    AuthService.logout(); // This clears the JWT token from localStorage
+    navigate('/login');
+    window.location.reload(); // Ensures the app state is fully reset
+  };
+
   return (
-    <>
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           <img src={logo} alt="Company Logo" />
         </a>
         <button
@@ -27,43 +35,45 @@ function Header() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <a 
+              <button
+                type="button"
                 className={`nav-link ${activeLink === 'Home' ? 'active' : ''}`} 
-                aria-current="page" 
-                href="#"
+                aria-current={activeLink === 'Home' ? 'page' : undefined}
                 onClick={() => setActiveLink('Home')}>
                 Home
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a 
-                className={`nav-link ${activeLink === 'Employees' ? 'active' : ''}`} 
-                href="#"
+              <button
+                type="button"
+                className={`nav-link ${activeLink === 'Employees' ? 'active' : ''}`}
+                aria-current={activeLink === 'Employees' ? 'page' : undefined}
                 onClick={() => setActiveLink('Employees')}>
                 Employees
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a 
-                className={`nav-link ${activeLink === 'Reports' ? 'active' : ''}`} 
-                href="#"
+              <button
+                type="button"
+                className={`nav-link ${activeLink === 'Reports' ? 'active' : ''}`}
+                aria-current={activeLink === 'Reports' ? 'page' : undefined}
                 onClick={() => setActiveLink('Reports')}>
                 Reports
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a 
-                className={`nav-link ${activeLink === 'Logout' ? 'active' : ''}`} 
-                href="#"
-                onClick={() => setActiveLink('Logout')}>
+              <button
+                type="button"
+                className={`nav-link ${activeLink === 'Logout' ? 'active' : ''}`}
+                aria-current={activeLink === 'Logout' ? 'page' : undefined}
+                onClick={handleLogout}>
                 Logout
-              </a>
+              </button>
             </li>
           </ul>
         </div>
       </div>
     </nav>
-    </>
   );
 }
 
