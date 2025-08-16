@@ -7,14 +7,14 @@ function Footer() {
     <footer className="bg-light text-center text-lg-start mt-auto">
       <div className="container p-2">
         <div className="row align-items-start">
-          <div className="col-lg-6 col-md-12 mb-2 mb-md-0">
+          <div className="col-lg-6 col-md-12">
             <h5 className="text-uppercase">Harmony HR</h5>
             <p>
               Your integrated solution for human resource management. Streamlining payroll, benefits, and employee data with ease and precision.
             </p>
           </div>
 
-          <div className="col-lg-3 col-md-6 mb-2 mb-md-0">
+          <div className="col-lg-3 col-md-6">
             <h5 className="text-uppercase">Links</h5>
             <ul className="list-unstyled mb-0">
               <li>
@@ -26,7 +26,7 @@ function Footer() {
             </ul>
           </div>
 
-          <div className="col-lg-3 col-md-6 mb-2 mb-md-0">
+          <div className="col-lg-3 col-md-6">
             <h5 className="text-uppercase">Follow Us</h5>
             <ul className="list-unstyled">
               <li>
