@@ -5,6 +5,32 @@
     background-color: #e9ecef !important; /* A common, slightly darker grey */
 }
 
+/* Styles for the new icon controls */
+.header-icon.btn {
+    color: black; /* Set icon color to black */
+    background-color: transparent; /* Ensure no background color */
+    border: none; /* Remove border */
+    padding: 0.375rem 0.75rem; /* Standard Bootstrap button padding */
+    line-height: 1; /* Align icon vertically */
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.header-icon.btn:hover {
+    color: black; /* Keep icon color black on hover */
+    background-color: rgba(0, 0, 0, 0.1); /* Add a subtle background on hover */
+}
+
+/* Styles for links inside the off-canvas menu */
+.offcanvas-body .nav-link {
+    font-size: 1.2rem;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+}
+
+.offcanvas-body .nav-link:hover {
+    background-color: #f8f9fa;
+}
+
 .nav-item {
     margin: 0 0.35rem; /* Adds distance between tabs */
     font-size: 18px;
@@ -18,7 +44,7 @@
 
 /* On hover: make font larger and underline */
 .nav-link:hover {
-    transform: scale(1.15);
+    transform: scale(1.05);
     transition-duration: 100ms;
     transition-behavior: smooth;
 }

@@ -2,7 +2,27 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Add underline to footer links on hover */
 footer a.text-decoration-none:hover {
   text-decoration: underline !important;
 }
+
+/* Remove extra space from list items */
+footer .list-unstyled li {
+  padding-bottom: 0;
+}
+
+/* Reduce font size and margins for a more compact footer */
+footer h5 {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+footer p {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+footer .copyright-bar {
+  /* Add any specific styles for the copyright bar here */
+}
+

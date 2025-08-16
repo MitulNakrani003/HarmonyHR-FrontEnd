@@ -8,6 +8,7 @@ import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import AuthService from '../services/auth.service';
 import '../styles/MainLayout.css';
 import JobsPage from '../pages/JobsPage';
+import ProfilePage from '../pages/ProfilePage'; // Import the new profile page
 
 function MainLayout() {
     const location = useLocation();
@@ -23,6 +24,7 @@ function MainLayout() {
                     <Route path="/register" element={<RegisterUserPage />} />
                     <Route path="/home" element={currentUser ? <HomePage /> : <Navigate to="/login" />} />
                     <Route path="/jobs" element={currentUser ? <JobsPage /> : <Navigate to="/login" />} />
+                    <Route path="/profile" element={currentUser ? <ProfilePage /> : <Navigate to="/login" />} />
                     <Route path="/login/forgotpassword" element={<ForgotPasswordPage />} />
                     <Route path="*" element={<Navigate to={currentUser ? "/home" : "/login"} />} />
                 </Routes>

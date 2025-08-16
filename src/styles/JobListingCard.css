@@ -1,0 +1,47 @@
+.job-listing-card {
+  border: 1px solid #e0e0e0;
+  border-left: 5px solid #0d6efd; /* Primary color accent */
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.job-listing-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+.job-listing-card .card-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.job-meta {
+  display: flex;
+  gap: 1.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.job-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.job-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.job-details span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.apply-btn {
+  white-space: nowrap; /* Prevents the button text from wrapping */
+}

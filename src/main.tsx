@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import Bootstrap's JS
 import './index.css'
 import MainLayout from './layouts/MainLayout.tsx'
 
