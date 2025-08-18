@@ -22,10 +22,9 @@ function Login() {
     AuthService.login(username, password).then(
       () => {
         navigate('/home');
-        window.location.reload(); // Reload to update auth-dependent components like the header
+        window.location.reload();
       },
       (error) => {
-        // Default error message
         let resMessage: string;
 
         if (error.response) {

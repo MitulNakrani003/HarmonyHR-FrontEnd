@@ -4,7 +4,7 @@ import '../styles/Footer.css';
 
 function Footer() {
   return (
-    <footer className="bg-light text-center text-lg-start mt-auto">
+    <footer className="bg-light text-center text-lg-start mt-5">
       <div className="container p-2">
         <div className="row align-items-start">
           <div className="col-lg-6 col-md-12">
@@ -18,7 +18,7 @@ function Footer() {
             <h5 className="text-uppercase">Links</h5>
             <ul className="list-unstyled mb-0">
               <li>
-                <a href="#!" className="text-dark text-decoration-none">Privacy Policy</a>
+                <a href="https://github.com/MitulNakrani003/HarmonyHR-FrontEnd" target='blank' className="text-dark text-decoration-none">Source Code</a>
               </li>
               <li>
                 <a href="#!" className="text-dark text-decoration-none">Terms of Service</a>
@@ -30,10 +30,10 @@ function Footer() {
             <h5 className="text-uppercase">Follow Us</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="#!" className="text-dark text-decoration-none">Source Code</a>
+                <a href="https://www.linkedin.com/in/mitul-nakrani/" target='blank' className="text-dark text-decoration-none">LinkedIn</a>
               </li>
               <li>
-                <a href="#!" className="text-dark text-decoration-none">Github</a>
+                <a href="https://github.com/MitulNakrani003" target='blank' className="text-dark text-decoration-none">Github</a>
               </li>
               
             </ul>

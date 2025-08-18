@@ -55,6 +55,23 @@
   gap: 0.5rem;
 }
 
+/* Style for the new secondary "More" button */
+.more-btn {
+  white-space: nowrap;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.75rem;
+  background-color: transparent;
+  border-color: #26a69a; /* Harmony HR Teal border */
+  color: #26a69a; /* Harmony HR Teal text */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.more-btn:hover {
+  background-color: #63b5ad; /* Lighter teal on hover */
+  border-color: #63b5ad; /* Match border color on hover */
+  color: white;
+}
+
 .apply-btn {
   white-space: nowrap;
   font-size: 0.9rem; /* Smaller button text */

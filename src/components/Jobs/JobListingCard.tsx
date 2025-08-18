@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import type { Job } from '../../services/jobs.service';
 import '../../styles/JobListingCard.css';
 import { BsGeoAlt, BsBuilding, BsCalendar, BsBriefcase } from 'react-icons/bs';
@@ -14,6 +15,12 @@ const formatDate = (dateString: string) => {
 };
 
 const JobListingCard: React.FC<JobListingCardProps> = ({ job }) => {
+  const navigate = useNavigate(); // Initialize the navigate function
+
+  const handleDetailsClick = () => {
+    navigate(`/jobs/${job.id}`); // Navigate to the detail page
+  };
+
   return (
     <div className="card job-listing-card mb-3">
       <div className="card-body">
@@ -25,7 +32,11 @@ const JobListingCard: React.FC<JobListingCardProps> = ({ job }) => {
               <span><BsGeoAlt /> {job.location}</span>
             </div>
           </div>
-          <button className="btn btn-primary apply-btn">Apply Now</button>
+          {/* Button Group */}
+          <div className="d-flex flex-column flex-sm-row gap-2 align-items-end">
+            <button className="btn btn-secondary more-btn" onClick={handleDetailsClick}>Details</button>
+            <button className="btn btn-primary apply-btn">Apply Now</button>
+          </div>
         </div>
         <hr />
         <div className="job-details">

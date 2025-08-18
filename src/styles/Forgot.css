@@ -11,3 +11,12 @@
     text-align: center;
     margin-bottom: 15px;
 }
+
+footer li {
+    font-size: 0.85rem;
+    margin-bottom: 0.0rem;
+}
+
+footer .row{
+    margin-top: 0.8rem;
+}
