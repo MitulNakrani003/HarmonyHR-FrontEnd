@@ -1,6 +1,6 @@
 import React from 'react';
-import type { Job } from '../services/jobs.service';
-import '../styles/JobListingCard.css';
+import type { Job } from '../../services/jobs.service';
+import '../../styles/JobListingCard.css';
 import { BsGeoAlt, BsBuilding, BsCalendar, BsBriefcase } from 'react-icons/bs';
 
 interface JobListingCardProps {

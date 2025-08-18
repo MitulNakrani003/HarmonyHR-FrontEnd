@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import AuthService from '../services/auth.service';
-import HomeService from '../services/home.service';
-import '../styles/EmployeeDetailsDashboard.css'; // Import the stylesheet
+import AuthService from '../../services/auth.service';
+import HomeService from '../../services/home.service';
+import '../../styles/EmployeeDetailsDashboard.css';
 
 // Define an interface for the nested Address object
 interface Address {

@@ -1,4 +1,4 @@
-import EmployeeDetailsDashboard from '../components/EmployeeDetailsDashboard';
+import EmployeeDetailsDashboard from '../components/Home/EmployeeDetailsDashboard';
 
 function HomePage() {
 

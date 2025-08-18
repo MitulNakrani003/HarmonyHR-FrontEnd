@@ -1,0 +1,14 @@
+.sub-header-container {
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sub-header-container .btn {
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+/* Improve visual feedback for disabled buttons */
+.sub-header-container .btn:disabled {
+  cursor: not-allowed;
+}
