@@ -17,15 +17,8 @@ const JobInDetail: React.FC<JobInDetailProps> = ({ job }) => {
       </div>
 
       <div className="row mt-4">
-        <div className="col-lg-8">
-          <div className="card detail-card">
-            <div className="card-body">
-              <h5 className="card-title">Job Description</h5>
-              <p className="card-text">{job.description}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-4">
+        {/* Key Details Card - now on top */}
+        <div className="col-12">
           <div className="card detail-card">
             <div className="card-body">
               <h5 className="card-title">Key Details</h5>
@@ -36,6 +29,16 @@ const JobInDetail: React.FC<JobInDetailProps> = ({ job }) => {
                 <li><BsPerson /> <strong>Hiring Manager:</strong> {job.hiringManager}</li>
                 <li><BsFillPersonVcardFill /> <strong>Posted By:</strong> {job.postedBy}</li>
               </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Job Description Card - now on the bottom with spacing */}
+        <div className="col-12 mt-4">
+          <div className="card detail-card">
+            <div className="card-body">
+              <h5 className="card-title">Job Description</h5>
+              <p className="card-text">{job.description}</p>
             </div>
           </div>
         </div>

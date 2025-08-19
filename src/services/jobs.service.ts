@@ -3,6 +3,7 @@ import AuthService from './auth.service';
 
 const API_URL = 'http://localhost:8080/api/jobs/';
 
+// Interface for the raw job list from the API
 interface ApiJob {
   jobId: number;
   jobTitle: string;
@@ -17,7 +18,17 @@ interface ApiJob {
   departmentTitle: string;
 }
 
-// 2. Keep the existing Job interface that your components use. No changes needed here.
+// Interface for the raw detailed job data from the API
+export interface ApiJobDetail extends ApiJob {
+  compensation: number;
+  hiringManagerName: string;
+  hiringManagerEmail: string;
+  postedByName: string;
+  postedByEmail: string;
+  departmentDescription: string;
+}
+
+// Frontend interface for a job in a list
 export interface Job {
   id: number;
   position: string;
@@ -29,66 +40,68 @@ export interface Job {
   description: string;
 }
 
-// Define the structure for the detailed job data from the API
+// Frontend interface for the detailed job view
 export interface JobDetail extends Job {
   compensation: string;
   hiringManager: string;
   postedBy: string;
   fullAddress: string;
+  departmentDescription: string;
 }
 
-// 3. Update the service function to fetch, transform, and return the data
+// Function to get all job listings (remains the same)
 const getAllJobs = (): Promise<AxiosResponse<Job[]>> => {
   return axios.get<ApiJob[]>(API_URL, { headers: AuthService.authHeader() })
     .then(response => {
-      // Map the raw API data to the Job structure used by the frontend
       const transformedJobs: Job[] = response.data.map(apiJob => ({
         id: apiJob.jobId,
         position: apiJob.jobTitle,
         datePosted: apiJob.postedOn,
-        location: `${apiJob.city}, ${apiJob.state}`, // Combine city and state
+        location: `${apiJob.city}, ${apiJob.state}`,
         department: apiJob.departmentTitle,
         minExperience: apiJob.minimumExperience,
         maxExperience: apiJob.maximumExperience,
         description: apiJob.jobDescription,
       }));
+      return { ...response, data: transformedJobs };
+    });
+};
 
-      // Return a new response object that looks like the original, but with the transformed data
+// UPDATED: Fetches and transforms detailed data for a single job from the API
+const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
+  return axios.get<ApiJobDetail>(`${API_URL}${id}`, { headers: AuthService.authHeader() })
+    .then(response => {
+      const apiDetail = response.data;
+
+      // Transform the raw API data into the structure the frontend components expect
+      const transformedJobDetail: JobDetail = {
+        id: apiDetail.jobId,
+        position: apiDetail.jobTitle,
+        datePosted: apiDetail.postedOn,
+        location: `${apiDetail.city}, ${apiDetail.state}`,
+        department: apiDetail.departmentTitle,
+        minExperience: apiDetail.minimumExperience,
+        maxExperience: apiDetail.maximumExperience,
+        description: apiDetail.jobDescription,
+        // New detailed fields
+        compensation: `$${apiDetail.compensation.toLocaleString()}`, // Format compensation as currency
+        hiringManager: `${apiDetail.hiringManagerName} (${apiDetail.hiringManagerEmail})`,
+        postedBy: `${apiDetail.postedByName} (${apiDetail.postedByEmail})`,
+        fullAddress: `${apiDetail.jobAddress}, ${apiDetail.city}, ${apiDetail.state}`,
+        departmentDescription: apiDetail.departmentDescription,
+      };
+
+      // Return a new response object with the transformed data
       return {
         ...response,
-        data: transformedJobs,
+        data: transformedJobDetail,
       };
     });
 };
 
-// MOCK FUNCTION: This simulates fetching detailed data for a single job.
-// Replace this with a real API call to /api/jobs/{id}
-const getJobById = (id: number): Promise<{ data: JobDetail }> => {
-  console.log(`Fetching job with ID: ${id}`);
-  // This is mock data. In a real app, you'd fetch and transform the data.
-  const mockDetail: JobDetail = {
-    id: id,
-    position: 'Senior Frontend Developer',
-    datePosted: '2025-08-10T09:00:00Z',
-    location: 'New York, NY (Remote)',
-    department: 'Engineering',
-    minExperience: 5,
-    maxExperience: 8,
-    description: 'Lead the development of our next-generation user interfaces using React and TypeScript. You will be responsible for architecting and building complex, scalable, and high-performance web applications. This role requires a deep understanding of the React ecosystem, state management, and modern frontend build pipelines.',
-    compensation: '$120,000 - $160,000 per year, plus stock options',
-    hiringManager: 'Jane Doe, Engineering Manager',
-    postedBy: 'John Smith, HR Recruiter',
-    fullAddress: '123 Tech Avenue, New York, NY 10001'
-  };
-  return Promise.resolve({ data: mockDetail });
-  // REAL API CALL EXAMPLE:
-  // return axios.get<JobDetail>(`${API_URL}/${id}`, { headers: AuthService.authHeader() });
-};
-
-
 const JobsService = {
   getAllJobs,
-  getJobById, // Add the new function to the exported service
+  getJobById,
 };
 
 export default JobsService;
