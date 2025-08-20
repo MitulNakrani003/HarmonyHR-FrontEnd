@@ -27,7 +27,7 @@
 }
 
 .detail-card .card-title {
-  margin-bottom: 1rem; /* Adds space below the section headings */
+  margin-bottom: 1rem;
 }
 
 .key-details-list li {
@@ -41,5 +41,5 @@
 .key-details-list svg {
   margin-top: 4px;
   color: #26a69a;
-  flex-shrink: 0; /* Prevents icon from shrinking */
+  flex-shrink: 0;
 }

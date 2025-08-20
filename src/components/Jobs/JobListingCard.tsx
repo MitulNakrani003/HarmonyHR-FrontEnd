@@ -58,7 +58,6 @@ const JobListingCard: React.FC<JobListingCardProps> = ({ job, isSelected, onSele
               <div className="job-meta">
                 <span><BsBuilding /> {job.department}</span>
                 <span><BsGeoAlt /> {job.location}</span>
-                {/* Updated inline toggle - now just an arrow */}
                 <span className="more-toggle ms-3" onClick={handleToggleDetails}>
                   <BsChevronDown className={`toggle-arrow ${isDetailsOpen ? 'open' : ''}`} />
                 </span>
@@ -72,7 +71,6 @@ const JobListingCard: React.FC<JobListingCardProps> = ({ job, isSelected, onSele
           </div>
         </div>
 
-        {/* Collapsible Content - <hr /> is removed */}
         <div className={`collapsible-content ${isDetailsOpen ? 'open' : ''}`}>
           <div className="job-details pt-3">
             <span>

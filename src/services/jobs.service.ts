@@ -99,20 +99,19 @@ const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
     });
 };
 
-// New function to delete one or more jobs by their IDs
-const deleteJobsByIds = (jobIds: number[]): Promise<AxiosResponse<void>> => {
-  // The backend likely expects a DELETE request with the IDs in the request body.
-  // Adjust if your API expects them as query parameters.
-  return axios.delete(`${API_URL}delete`, {
+// UPDATED: This function now sends a PUT request to the /deactivate endpoint
+const deactivateJobsByIds = (jobIds: number[]): Promise<AxiosResponse<string>> => {
+  // This sends a PUT request with the array of IDs directly in the body, as expected by your backend.
+  return axios.put(`${API_URL}deactivate`, jobIds, {
     headers: AuthService.authHeader(),
-    data: { jobIds }, // Send IDs in the request body
   });
 };
 
 const JobsService = {
   getAllJobs,
   getJobById,
-  deleteJobsByIds, // Add the new function
+  // The function name is updated for clarity, but it will be called by the same "Delete" button logic.
+  deleteJobsByIds: deactivateJobsByIds,
 };
 
 export default JobsService;
