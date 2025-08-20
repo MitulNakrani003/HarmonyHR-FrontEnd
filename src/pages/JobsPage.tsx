@@ -9,7 +9,8 @@ function JobsPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedJobIds, setSelectedJobIds] = useState<number[]>([]);
 
-  useEffect(() => {
+  const fetchJobs = () => {
+    setIsLoading(true);
     JobsService.getAllJobs().then(
       (response) => {
         setJobs(response.data);
@@ -22,22 +23,43 @@ function JobsPage() {
         setIsLoading(false);
       }
     );
-  }, []); // Empty dependency array ensures this runs only once on mount
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const handleToggleSelection = (jobId: number) => {
+    setSelectedJobIds((prevSelected) =>
+      prevSelected.includes(jobId)
+        ? prevSelected.filter((id) => id !== jobId)
+        : [...prevSelected, jobId]
+    );
+  };
 
   const handleAddJob = () => {
     console.log('Opening Add Job modal...');
-    // Logic to show a form or navigate to an "add job" page
   };
 
   const handleEditJob = () => {
+    if (selectedJobIds.length !== 1) return;
     console.log('Editing job with ID:', selectedJobIds[0]);
-    // Logic to show an edit form for the selected job
   };
 
   const handleDeleteJobs = () => {
+    if (selectedJobIds.length === 0) return;
     if (window.confirm(`Are you sure you want to delete ${selectedJobIds.length} job(s)?`)) {
-      console.log('Deleting jobs with IDs:', selectedJobIds);
-      // Logic to call the delete API endpoint
+      JobsService.deleteJobsByIds(selectedJobIds)
+        .then(() => {
+          // Success: filter out deleted jobs from state and clear selection
+          setJobs(jobs.filter(job => !selectedJobIds.includes(job.id)));
+          setSelectedJobIds([]);
+        })
+        .catch(err => {
+          // Handle error
+          const errorMessage = err.response?.data?.message || 'Failed to delete jobs.';
+          setError(errorMessage);
+        });
     }
   };
 
@@ -60,8 +82,14 @@ function JobsPage() {
       return <p className="text-center mt-4">No open positions at this time. Please check back later.</p>;
     }
 
-    // Map over the jobs array and render a card for each job
-    return jobs.map(job => <JobListingCard key={job.id} job={job} />);
+    return jobs.map(job => (
+      <JobListingCard
+        key={job.id}
+        job={job}
+        isSelected={selectedJobIds.includes(job.id)}
+        onSelect={handleToggleSelection}
+      />
+    ));
   };
 
   return (

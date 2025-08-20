@@ -3,9 +3,26 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* New style for the selection count text */
+.selection-count-text {
+  font-weight: 500;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
 .sub-header-container .btn {
   font-weight: 500;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+/* Theme the "Add Job" button */
+.sub-header-container .btn-primary {
+  background-color: #26a69a;
+  border-color: #26a69a;
+}
+.sub-header-container .btn-primary:hover {
+  background-color: #00897b;
+  border-color: #00796b;
 }
 
 /* Improve visual feedback for disabled buttons */

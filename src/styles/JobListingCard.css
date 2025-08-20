@@ -1,12 +1,27 @@
 .job-listing-card {
   border: 1px solid #e0e0e0;
   border-left: 5px solid #26a69a; /* Harmony HR Teal accent */
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, border-color 0.2s;
+  cursor: pointer;
+}
+
+/* Style for the selected state */
+.job-listing-card.selected {
+  border-color: #00796b; /* Darker teal for selection */
+  background-color: #e0f2f1; /* Very light teal background */
 }
 
 .job-listing-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-3px);
+}
+
+/* Style for the selection checkbox */
+.selection-checkbox {
+  /* margin-top: 6px; <-- This is no longer needed */
+  width: 1.25em;
+  height: 1.25em;
+  cursor: pointer;
 }
 
 /* Reduce padding to decrease height */
@@ -36,9 +51,35 @@
   gap: 0.4rem;
 }
 
-/* Reduce margin on the divider */
-.job-listing-card hr {
-  margin: 0.75rem 0;
+/* Style for the new inline toggle */
+.more-toggle {
+  cursor: pointer;
+  color: #26a69a; /* Harmony HR Teal color for the arrow */
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease-in-out;
+}
+.more-toggle:hover {
+  color: #00897b; /* Darker teal on hover */
+}
+
+.toggle-arrow {
+  transition: transform 0.3s ease-in-out;
+}
+
+.toggle-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Styles for the collapsible section */
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease-in-out;
+}
+
+.collapsible-content.open {
+  max-height: 100px; /* Adjust if content is taller */
 }
 
 .job-details {
@@ -47,6 +88,11 @@
   align-items: center;
   font-size: 0.85rem; /* Reduced font size */
   color: #555;
+}
+
+/* Add top padding to the details section when it's inside the collapsible area */
+.collapsible-content .job-details {
+  padding-top: 0.75rem;
 }
 
 .job-details span {

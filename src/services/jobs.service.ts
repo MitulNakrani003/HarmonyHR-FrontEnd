@@ -99,9 +99,20 @@ const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
     });
 };
 
+// New function to delete one or more jobs by their IDs
+const deleteJobsByIds = (jobIds: number[]): Promise<AxiosResponse<void>> => {
+  // The backend likely expects a DELETE request with the IDs in the request body.
+  // Adjust if your API expects them as query parameters.
+  return axios.delete(`${API_URL}delete`, {
+    headers: AuthService.authHeader(),
+    data: { jobIds }, // Send IDs in the request body
+  });
+};
+
 const JobsService = {
   getAllJobs,
   getJobById,
+  deleteJobsByIds, // Add the new function
 };
 
 export default JobsService;
