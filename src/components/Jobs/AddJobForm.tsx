@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import JobsService, { type NewJobPayload, type HiringManager } from '../../services/jobs.service';
+import JobsService, { type NewJobPayload, type HiringManager, type Department } from '../../services/jobs.service';
 
 const AddJobForm: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +18,12 @@ const AddJobForm: React.FC = () => {
     hiringManagerEmail: '',
   });
   
+  // State for department dropdown
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [departmentSearch, setDepartmentSearch] = useState('');
+  const [isDepartmentDropdownOpen, setIsDepartmentDropdownOpen] = useState(false);
+  const departmentDropdownRef = useRef<HTMLDivElement>(null);
+
   // State for the hiring manager dropdown
   const [managers, setManagers] = useState<HiringManager[]>([]);
   const [managerSearch, setManagerSearch] = useState('');
@@ -28,28 +34,44 @@ const AddJobForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  // Fetch managers on component mount
+  // Fetch managers and departments on component mount
   useEffect(() => {
     JobsService.getHiringManagers()
       .then(response => setManagers(response.data))
       .catch(() => setError("Could not load hiring managers."));
+    
+    JobsService.getDepartments()
+      .then(response => setDepartments(response.data))
+      .catch(() => setError("Could not load departments."));
   }, []);
 
-  // Effect to close dropdown on outside click
+  // Effect to close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      if (departmentDropdownRef.current && !departmentDropdownRef.current.contains(event.target as Node)) {
+        setIsDepartmentDropdownOpen(false);
+      }
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownRef]);
+  }, [dropdownRef, departmentDropdownRef]);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleDepartmentSelect = (department: Department) => {
+    setFormData(prev => ({
+      ...prev,
+      departmentTitle: department.departmentTitle,
+    }));
+    setDepartmentSearch(department.departmentTitle);
+    setIsDepartmentDropdownOpen(false);
   };
 
   const handleManagerSelect = (manager: HiringManager) => {
@@ -67,7 +89,7 @@ const AddJobForm: React.FC = () => {
     const errors: Record<string, string> = {};
 
     if (!formData.jobTitle.trim()) errors.jobTitle = "Job title is required.";
-    if (!formData.departmentTitle.trim()) errors.departmentTitle = "Department is required.";
+    if (!formData.departmentTitle.trim()) errors.departmentTitle = "Please select a department from the list.";
     if (!formData.jobDescription.trim()) errors.jobDescription = "Job description is required.";
     
     const minExp = Number(formData.minimumExperience);
@@ -118,6 +140,10 @@ const AddJobForm: React.FC = () => {
       });
   };
 
+  const filteredDepartments = departments.filter(d =>
+    d.departmentTitle.toLowerCase().includes(departmentSearch.toLowerCase())
+  );
+
   const filteredManagers = managers.filter(m =>
     `${m.firstName} ${m.lastName} ${m.email}`.toLowerCase().includes(managerSearch.toLowerCase())
   );
@@ -134,8 +160,45 @@ const AddJobForm: React.FC = () => {
         </div>
         <div className="col-md-6 mb-3">
           <label htmlFor="departmentTitle" className="form-label">Department</label>
-          <input type="text" id="departmentTitle" name="departmentTitle" className={`form-control ${formErrors.departmentTitle ? 'is-invalid' : ''}`} onChange={handleChange} required />
-          {formErrors.departmentTitle && <div className="invalid-feedback">{formErrors.departmentTitle}</div>}
+          <div className="searchable-dropdown" ref={departmentDropdownRef}>
+            <input
+              type="text"
+              id="departmentTitle"
+              name="departmentTitle"
+              className={`form-control ${formErrors.departmentTitle ? 'is-invalid' : ''}`}
+              value={departmentSearch}
+              onChange={(e) => {
+                setDepartmentSearch(e.target.value);
+                setIsDepartmentDropdownOpen(true);
+                if (formData.departmentTitle) {
+                  setFormData(prev => ({...prev, departmentTitle: ''}));
+                }
+              }}
+              onFocus={() => setIsDepartmentDropdownOpen(true)}
+              placeholder="Search for a department..."
+              autoComplete="off"
+              required
+            />
+            {isDepartmentDropdownOpen && (
+              <div className="dropdown-menu show">
+                {filteredDepartments.length > 0 ? (
+                  filteredDepartments.map(dept => (
+                    <button
+                      key={dept.departmentId}
+                      type="button"
+                      className="dropdown-item"
+                      onClick={() => handleDepartmentSelect(dept)}
+                    >
+                      {dept.departmentTitle}
+                    </button>
+                  ))
+                ) : (
+                  <span className="dropdown-item-text">No departments found</span>
+                )}
+              </div>
+            )}
+          </div>
+          {formErrors.departmentTitle && <div className="invalid-feedback d-block">{formErrors.departmentTitle}</div>}
         </div>
       </div>
 

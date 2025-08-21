@@ -64,6 +64,12 @@ export interface NewJobPayload {
   hiringManagerEmail: string;
 }
 
+// New interface for Department data
+export interface Department {
+  departmentId: number;
+  departmentTitle: string;
+}
+
 // New interface for hiring manager data
 export interface HiringManager {
   empId: number;
@@ -129,6 +135,14 @@ const addJob = (jobData: NewJobPayload): Promise<AxiosResponse<ApiJob>> => {
   });
 };
 
+// New function to fetch departments
+const getDepartments = (): Promise<AxiosResponse<Department[]>> => {
+  const API_BASE_URL = "http://localhost:8080/api/departments"; 
+  return axios.get(`${API_BASE_URL}/`, {
+    headers: AuthService.authHeader(),
+  });
+};
+
 // New function to fetch hiring managers
 const getHiringManagers = (): Promise<AxiosResponse<HiringManager[]>> => {
   const API_BASE_URL = "http://localhost:8080/api/employee/"; 
@@ -148,7 +162,8 @@ const JobsService = {
   getAllJobs,
   getJobById,
   addJob,
-  getHiringManagers, // Add the new function
+  getHiringManagers,
+  getDepartments,
   deleteJobsByIds: deactivateJobsByIds,
 };
 
