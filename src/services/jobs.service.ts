@@ -49,6 +49,29 @@ export interface JobDetail extends Job {
   departmentDescription: string;
 }
 
+// Interface for the data payload when creating a new job
+export interface NewJobPayload {
+  jobTitle: string;
+  jobDescription: string;
+  departmentTitle: string;
+  minimumExperience: number;
+  maximumExperience: number;
+  compensation: number;
+  jobAddress: string;
+  city: string;
+  state: string;
+  hiringManagerName: string;
+  hiringManagerEmail: string;
+}
+
+// New interface for hiring manager data
+export interface HiringManager {
+  empId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 // Function to get all job listings (remains the same)
 const getAllJobs = (): Promise<AxiosResponse<Job[]>> => {
   return axios.get<ApiJob[]>(API_URL, { headers: AuthService.authHeader() })
@@ -99,9 +122,23 @@ const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
     });
 };
 
-// UPDATED: This function now sends a PUT request to the /deactivate endpoint
+// New function to add a job
+const addJob = (jobData: NewJobPayload): Promise<AxiosResponse<ApiJob>> => {
+  return axios.post(API_URL, jobData, {
+    headers: AuthService.authHeader(),
+  });
+};
+
+// New function to fetch hiring managers
+const getHiringManagers = (): Promise<AxiosResponse<HiringManager[]>> => {
+  const API_BASE_URL = "http://localhost:8080/api/employee/"; 
+  return axios.get(`${API_BASE_URL}hiringmanagers`, {
+    headers: AuthService.authHeader(),
+  });
+};
+
+// Function to deactivate jobs by IDs
 const deactivateJobsByIds = (jobIds: number[]): Promise<AxiosResponse<string>> => {
-  // This sends a PUT request with the array of IDs directly in the body, as expected by your backend.
   return axios.put(`${API_URL}deactivate`, jobIds, {
     headers: AuthService.authHeader(),
   });
@@ -110,7 +147,8 @@ const deactivateJobsByIds = (jobIds: number[]): Promise<AxiosResponse<string>> =
 const JobsService = {
   getAllJobs,
   getJobById,
-  // The function name is updated for clarity, but it will be called by the same "Delete" button logic.
+  addJob,
+  getHiringManagers, // Add the new function
   deleteJobsByIds: deactivateJobsByIds,
 };
 

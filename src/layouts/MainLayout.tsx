@@ -10,6 +10,7 @@ import '../styles/MainLayout.css';
 import JobsPage from '../pages/JobsPage';
 import ProfilePage from '../pages/ProfilePage'; // Import the new profile page
 import JobDetailPage from '../pages/JobDetailPage';
+import AddJobPage from '../pages/AddJobPage';
 
 function MainLayout() {
     const location = useLocation();
@@ -28,6 +29,7 @@ function MainLayout() {
                     <Route path="/profile" element={currentUser ? <ProfilePage /> : <Navigate to="/login" />} />
                     <Route path="/login/forgotpassword" element={<ForgotPasswordPage />} />
                     <Route path="/jobs/:jobId" element={<JobDetailPage />} />
+                    <Route path="/jobs/add" element={<AddJobPage />} />
                     <Route path="*" element={<Navigate to={currentUser ? "/home" : "/login"} />} />
                 </Routes>
             </main>

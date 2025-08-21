@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import JobsService, { type Job } from '../services/jobs.service';
 import JobListingCard from '../components/Jobs/JobListingCard';
 import JobsSubHeader from '../components/Jobs/JobsSubHeader';
 import DeletePopup from '../components/DeletePopup'; // 1. Import the popup component
 
 function JobsPage() {
+  const navigate = useNavigate(); // Initialize navigate
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +42,7 @@ function JobsPage() {
   };
 
   const handleAddJob = () => {
-    console.log('Opening Add Job modal...');
+    navigate('/jobs/add'); // Navigate to the add job form
   };
 
   const handleEditJob = () => {
