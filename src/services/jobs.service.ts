@@ -49,19 +49,19 @@ export interface JobDetail extends Job {
   departmentDescription: string;
 }
 
-// Interface for the data payload when creating a new job
+// Interface for the data payload when creating a new job, matching the backend entity
 export interface NewJobPayload {
   jobTitle: string;
   jobDescription: string;
-  departmentTitle: string;
+  departmentId: number;
   minimumExperience: number;
   maximumExperience: number;
   compensation: number;
   jobAddress: string;
   city: string;
   state: string;
-  hiringManagerName: string;
-  hiringManagerEmail: string;
+  hiringManagerId: number;
+  postedByUserId: number; // Renamed from postedById
 }
 
 // New interface for Department data
@@ -130,7 +130,8 @@ const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
 
 // New function to add a job
 const addJob = (jobData: NewJobPayload): Promise<AxiosResponse<ApiJob>> => {
-  return axios.post(API_URL, jobData, {
+  const API_BASE_URL = "http://localhost:8080/api/jobs/create"; 
+  return axios.post(`${API_BASE_URL}`, jobData, {
     headers: AuthService.authHeader(),
   });
 };

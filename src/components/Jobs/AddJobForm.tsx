@@ -1,21 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JobsService, { type NewJobPayload, type HiringManager, type Department } from '../../services/jobs.service';
+import AuthService from '../../services/auth.service'; // Import AuthService
+
+// Define a more specific type for the form data state
+interface JobFormData {
+  jobTitle: string;
+  jobDescription: string;
+  departmentId: number | null;
+  minimumExperience: number;
+  maximumExperience: number;
+  compensation: number;
+  jobAddress: string;
+  city: string;
+  state: string;
+  hiringManagerId: number | null;
+}
 
 const AddJobForm: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<NewJobPayload>({
+  const [formData, setFormData] = useState<JobFormData>({
     jobTitle: '',
-    departmentTitle: '',
     jobDescription: '',
+    departmentId: null,
     minimumExperience: 0,
     maximumExperience: 0,
     compensation: 0,
     jobAddress: '',
     city: '',
     state: '',
-    hiringManagerName: '',
-    hiringManagerEmail: '',
+    hiringManagerId: null,
   });
   
   // State for department dropdown
@@ -32,6 +46,7 @@ const AddJobForm: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // State for success message
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Fetch managers and departments on component mount
@@ -66,21 +81,14 @@ const AddJobForm: React.FC = () => {
   };
 
   const handleDepartmentSelect = (department: Department) => {
-    setFormData(prev => ({
-      ...prev,
-      departmentTitle: department.departmentTitle,
-    }));
+    setFormData(prev => ({ ...prev, departmentId: department.departmentId }));
     setDepartmentSearch(department.departmentTitle);
     setIsDepartmentDropdownOpen(false);
   };
 
   const handleManagerSelect = (manager: HiringManager) => {
     const fullName = `${manager.firstName} ${manager.lastName}`;
-    setFormData(prev => ({
-      ...prev,
-      hiringManagerName: fullName,
-      hiringManagerEmail: manager.email,
-    }));
+    setFormData(prev => ({ ...prev, hiringManagerId: manager.empId }));
     setManagerSearch(`${fullName} (${manager.email})`);
     setIsDropdownOpen(false);
   };
@@ -89,7 +97,7 @@ const AddJobForm: React.FC = () => {
     const errors: Record<string, string> = {};
 
     if (!formData.jobTitle.trim()) errors.jobTitle = "Job title is required.";
-    if (!formData.departmentTitle.trim()) errors.departmentTitle = "Please select a department from the list.";
+    if (!formData.departmentId) errors.departmentTitle = "Please select a department from the list.";
     if (!formData.jobDescription.trim()) errors.jobDescription = "Job description is required.";
     
     const minExp = Number(formData.minimumExperience);
@@ -104,10 +112,7 @@ const AddJobForm: React.FC = () => {
     if (!formData.city.trim()) errors.city = "City is required.";
     if (!formData.state.trim()) errors.state = "State is required.";
 
-    // Updated validation for hiring manager
-    if (!formData.hiringManagerEmail) {
-      errors.hiringManager = "Please select a hiring manager from the list.";
-    }
+    if (!formData.hiringManagerId) errors.hiringManager = "Please select a hiring manager from the list.";
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -116,22 +121,41 @@ const AddJobForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) {
-      return; // Stop submission if validation fails
+      return;
+    }
+
+    const currentUser = AuthService.getCurrentUser();
+    if (!currentUser?.userId) {
+      setError("You must be logged in to create a job.");
+      return;
     }
 
     setIsLoading(true);
     setError(null);
+    setSuccessMessage(null); // Clear previous messages
 
     const payload: NewJobPayload = {
-      ...formData,
+      jobTitle: formData.jobTitle,
+      jobDescription: formData.jobDescription,
+      departmentId: formData.departmentId!,
       minimumExperience: Number(formData.minimumExperience),
       maximumExperience: Number(formData.maximumExperience),
       compensation: Number(formData.compensation),
+      jobAddress: formData.jobAddress,
+      city: formData.city,
+      state: formData.state,
+      hiringManagerId: formData.hiringManagerId!,
+      postedByUserId: currentUser.userId,
     };
 
     JobsService.addJob(payload)
       .then(() => {
-        navigate('/jobs'); // Redirect to jobs list on success
+        // On success, show message and then redirect
+        setIsLoading(false);
+        setSuccessMessage("Job created successfully! Redirecting to the job listings...");
+        setTimeout(() => {
+          navigate('/jobs');
+        }, 2000); // Wait 2 seconds before redirecting
       })
       .catch(err => {
         const errorMessage = err.response?.data?.message || 'Failed to create job.';
@@ -151,6 +175,7 @@ const AddJobForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="add-job-form" noValidate>
       {error && <div className="alert alert-danger">{error}</div>}
+      {successMessage && <div className="alert alert-success">{successMessage}</div>}
 
       <div className="row">
         <div className="col-md-6 mb-3">
@@ -170,8 +195,8 @@ const AddJobForm: React.FC = () => {
               onChange={(e) => {
                 setDepartmentSearch(e.target.value);
                 setIsDepartmentDropdownOpen(true);
-                if (formData.departmentTitle) {
-                  setFormData(prev => ({...prev, departmentTitle: ''}));
+                if (formData.departmentId) {
+                  setFormData(prev => ({...prev, departmentId: null}));
                 }
               }}
               onFocus={() => setIsDepartmentDropdownOpen(true)}
@@ -259,8 +284,8 @@ const AddJobForm: React.FC = () => {
                 setManagerSearch(e.target.value);
                 setIsDropdownOpen(true);
                 // Clear selection if user types something new
-                if (formData.hiringManagerEmail) {
-                  setFormData(prev => ({...prev, hiringManagerName: '', hiringManagerEmail: ''}));
+                if (formData.hiringManagerId) {
+                  setFormData(prev => ({...prev, hiringManagerId: null}));
                 }
               }}
               onFocus={() => setIsDropdownOpen(true)}
