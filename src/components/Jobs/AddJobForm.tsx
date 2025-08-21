@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JobsService, { type NewJobPayload, type HiringManager, type Department } from '../../services/jobs.service';
-import AuthService from '../../services/auth.service'; // Import AuthService
+import AuthService from '../../services/auth.service';
+import SuccessPopup from '../SuccessPopup'; // 1. Import the popup component
 
 // Define a more specific type for the form data state
 interface JobFormData {
@@ -46,7 +47,8 @@ const AddJobForm: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null); // State for success message
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false); // 2. Add state for popup visibility
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Fetch managers and departments on component mount
@@ -150,18 +152,21 @@ const AddJobForm: React.FC = () => {
 
     JobsService.addJob(payload)
       .then(() => {
-        // On success, show message and then redirect
+        // 3. On success, set the message and open the popup
         setIsLoading(false);
-        setSuccessMessage("Job created successfully! Redirecting to the job listings...");
-        setTimeout(() => {
-          navigate('/jobs');
-        }, 2000); // Wait 2 seconds before redirecting
+        setSuccessMessage("Job has been created successfully!");
+        setIsSuccessPopupOpen(true);
       })
       .catch(err => {
         const errorMessage = err.response?.data?.message || 'Failed to create job.';
         setError(errorMessage);
         setIsLoading(false);
       });
+  };
+
+  const handleAcknowledgeSuccess = () => {
+    setIsSuccessPopupOpen(false);
+    navigate('/jobs'); // Navigate after the user acknowledges the popup
   };
 
   const filteredDepartments = departments.filter(d =>
@@ -173,156 +178,167 @@ const AddJobForm: React.FC = () => {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="add-job-form" noValidate>
-      {error && <div className="alert alert-danger">{error}</div>}
-      {successMessage && <div className="alert alert-success">{successMessage}</div>}
+    <> {/* 4. Wrap the form and popup in a fragment */}
+      <form onSubmit={handleSubmit} className="add-job-form" noValidate>
+        {error && <div className="alert alert-danger">{error}</div>}
+        {/* The inline success message is removed from here */}
 
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <label htmlFor="jobTitle" className="form-label">Job Title</label>
-          <input type="text" id="jobTitle" name="jobTitle" className={`form-control ${formErrors.jobTitle ? 'is-invalid' : ''}`} onChange={handleChange} required />
-          {formErrors.jobTitle && <div className="invalid-feedback">{formErrors.jobTitle}</div>}
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="departmentTitle" className="form-label">Department</label>
-          <div className="searchable-dropdown" ref={departmentDropdownRef}>
-            <input
-              type="text"
-              id="departmentTitle"
-              name="departmentTitle"
-              className={`form-control ${formErrors.departmentTitle ? 'is-invalid' : ''}`}
-              value={departmentSearch}
-              onChange={(e) => {
-                setDepartmentSearch(e.target.value);
-                setIsDepartmentDropdownOpen(true);
-                if (formData.departmentId) {
-                  setFormData(prev => ({...prev, departmentId: null}));
-                }
-              }}
-              onFocus={() => setIsDepartmentDropdownOpen(true)}
-              placeholder="Search for a department..."
-              autoComplete="off"
-              required
-            />
-            {isDepartmentDropdownOpen && (
-              <div className="dropdown-menu show">
-                {filteredDepartments.length > 0 ? (
-                  filteredDepartments.map(dept => (
-                    <button
-                      key={dept.departmentId}
-                      type="button"
-                      className="dropdown-item"
-                      onClick={() => handleDepartmentSelect(dept)}
-                    >
-                      {dept.departmentTitle}
-                    </button>
-                  ))
-                ) : (
-                  <span className="dropdown-item-text">No departments found</span>
-                )}
-              </div>
-            )}
+        <div className="row">
+          <div className="col-md-6 mb-3">
+            <label htmlFor="jobTitle" className="form-label">Job Title</label>
+            <input type="text" id="jobTitle" name="jobTitle" className={`form-control ${formErrors.jobTitle ? 'is-invalid' : ''}`} onChange={handleChange} required />
+            {formErrors.jobTitle && <div className="invalid-feedback">{formErrors.jobTitle}</div>}
           </div>
-          {formErrors.departmentTitle && <div className="invalid-feedback d-block">{formErrors.departmentTitle}</div>}
-        </div>
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="jobDescription" className="form-label">Job Description</label>
-        <textarea id="jobDescription" name="jobDescription" className={`form-control ${formErrors.jobDescription ? 'is-invalid' : ''}`} rows={5} onChange={handleChange} required></textarea>
-        {formErrors.jobDescription && <div className="invalid-feedback">{formErrors.jobDescription}</div>}
-      </div>
-
-      <div className="row">
-        <div className="col-md-4 mb-3">
-          <label htmlFor="minimumExperience" className="form-label">Min Experience (Years)</label>
-          <input type="number" id="minimumExperience" name="minimumExperience" className={`form-control ${formErrors.minimumExperience ? 'is-invalid' : ''}`} onChange={handleChange} required />
-          {formErrors.minimumExperience && <div className="invalid-feedback">{formErrors.minimumExperience}</div>}
-        </div>
-        <div className="col-md-4 mb-3">
-          <label htmlFor="maximumExperience" className="form-label">Max Experience (Years)</label>
-          <input type="number" id="maximumExperience" name="maximumExperience" className={`form-control ${formErrors.maximumExperience ? 'is-invalid' : ''}`} onChange={handleChange} required />
-          {formErrors.maximumExperience && <div className="invalid-feedback">{formErrors.maximumExperience}</div>}
-        </div>
-        <div className="col-md-4 mb-3">
-          <label htmlFor="compensation" className="form-label">Yearly Compensation ($)</label>
-          <input type="number" id="compensation" name="compensation" className={`form-control ${formErrors.compensation ? 'is-invalid' : ''}`} onChange={handleChange} required />
-          {formErrors.compensation && <div className="invalid-feedback">{formErrors.compensation}</div>}
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-12 mb-3">
-          <label htmlFor="jobAddress" className="form-label">Address</label>
-          <input type="text" id="jobAddress" name="jobAddress" className={`form-control ${formErrors.jobAddress ? 'is-invalid' : ''}`} onChange={handleChange} required />
-          {formErrors.jobAddress && <div className="invalid-feedback">{formErrors.jobAddress}</div>}
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="city" className="form-label">City</label>
-          <input type="text" id="city" name="city" className={`form-control ${formErrors.city ? 'is-invalid' : ''}`} onChange={handleChange} required />
-          {formErrors.city && <div className="invalid-feedback">{formErrors.city}</div>}
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="state" className="form-label">State</label>
-          <input type="text" id="state" name="state" className={`form-control ${formErrors.state ? 'is-invalid' : ''}`} onChange={handleChange} required />
-          {formErrors.state && <div className="invalid-feedback">{formErrors.state}</div>}
-        </div>
-      </div>
-
-      {/* Replaced two fields with one searchable dropdown */}
-      <div className="row">
-        <div className="col-md-12 mb-3">
-          <label htmlFor="hiringManager" className="form-label">Hiring Manager</label>
-          <div className="searchable-dropdown" ref={dropdownRef}>
-            <input
-              type="text"
-              id="hiringManager"
-              name="hiringManager"
-              className={`form-control ${formErrors.hiringManager ? 'is-invalid' : ''}`}
-              value={managerSearch}
-              onChange={(e) => {
-                setManagerSearch(e.target.value);
-                setIsDropdownOpen(true);
-                // Clear selection if user types something new
-                if (formData.hiringManagerId) {
-                  setFormData(prev => ({...prev, hiringManagerId: null}));
-                }
-              }}
-              onFocus={() => setIsDropdownOpen(true)}
-              placeholder="Search for a manager..."
-              autoComplete="off"
-              required
-            />
-            {isDropdownOpen && (
-              <div className="dropdown-menu show">
-                {filteredManagers.length > 0 ? (
-                  filteredManagers.map(manager => (
-                    <button
-                      key={manager.empId}
-                      type="button"
-                      className="dropdown-item"
-                      onClick={() => handleManagerSelect(manager)}
-                    >
-                      {`${manager.firstName} ${manager.lastName}`} ({manager.email})
-                    </button>
-                  ))
-                ) : (
-                  <span className="dropdown-item-text">No managers found</span>
-                )}
-              </div>
-            )}
+          <div className="col-md-6 mb-3">
+            <label htmlFor="departmentTitle" className="form-label">Department</label>
+            <div className="searchable-dropdown" ref={departmentDropdownRef}>
+              <input
+                type="text"
+                id="departmentTitle"
+                name="departmentTitle"
+                className={`form-control ${formErrors.departmentTitle ? 'is-invalid' : ''}`}
+                value={departmentSearch}
+                onChange={(e) => {
+                  setDepartmentSearch(e.target.value);
+                  setIsDepartmentDropdownOpen(true);
+                  if (formData.departmentId) {
+                    setFormData(prev => ({...prev, departmentId: null}));
+                  }
+                }}
+                onFocus={() => setIsDepartmentDropdownOpen(true)}
+                placeholder="Search for a department..."
+                autoComplete="off"
+                required
+              />
+              {isDepartmentDropdownOpen && (
+                <div className="dropdown-menu show">
+                  {filteredDepartments.length > 0 ? (
+                    filteredDepartments.map(dept => (
+                      <button
+                        key={dept.departmentId}
+                        type="button"
+                        className="dropdown-item"
+                        onClick={() => handleDepartmentSelect(dept)}
+                      >
+                        {dept.departmentTitle}
+                      </button>
+                    ))
+                  ) : (
+                    <span className="dropdown-item-text">No departments found</span>
+                  )}
+                </div>
+              )}
+            </div>
+            {formErrors.departmentTitle && <div className="invalid-feedback d-block">{formErrors.departmentTitle}</div>}
           </div>
-          {formErrors.hiringManager && <div className="invalid-feedback d-block">{formErrors.hiringManager}</div>}
         </div>
-      </div>
 
-      <div className="d-flex justify-content-end gap-2 mt-4">
-        <button type="button" className="btn btn-secondary" onClick={() => navigate('/jobs')}>Cancel</button>
-        <button type="submit" className="btn btn-primary" disabled={isLoading}>
-          {isLoading ? 'Creating...' : 'Create Job'}
-        </button>
-      </div>
-    </form>
+        <div className="mb-3">
+          <label htmlFor="jobDescription" className="form-label">Job Description</label>
+          <textarea id="jobDescription" name="jobDescription" className={`form-control ${formErrors.jobDescription ? 'is-invalid' : ''}`} rows={5} onChange={handleChange} required></textarea>
+          {formErrors.jobDescription && <div className="invalid-feedback">{formErrors.jobDescription}</div>}
+        </div>
+
+        <div className="row">
+          <div className="col-md-4 mb-3">
+            <label htmlFor="minimumExperience" className="form-label">Min Experience (Years)</label>
+            <input type="number" id="minimumExperience" name="minimumExperience" className={`form-control ${formErrors.minimumExperience ? 'is-invalid' : ''}`} onChange={handleChange} required />
+            {formErrors.minimumExperience && <div className="invalid-feedback">{formErrors.minimumExperience}</div>}
+          </div>
+          <div className="col-md-4 mb-3">
+            <label htmlFor="maximumExperience" className="form-label">Max Experience (Years)</label>
+            <input type="number" id="maximumExperience" name="maximumExperience" className={`form-control ${formErrors.maximumExperience ? 'is-invalid' : ''}`} onChange={handleChange} required />
+            {formErrors.maximumExperience && <div className="invalid-feedback">{formErrors.maximumExperience}</div>}
+          </div>
+          <div className="col-md-4 mb-3">
+            <label htmlFor="compensation" className="form-label">Yearly Compensation ($)</label>
+            <input type="number" id="compensation" name="compensation" className={`form-control ${formErrors.compensation ? 'is-invalid' : ''}`} onChange={handleChange} required />
+            {formErrors.compensation && <div className="invalid-feedback">{formErrors.compensation}</div>}
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-12 mb-3">
+            <label htmlFor="jobAddress" className="form-label">Address</label>
+            <input type="text" id="jobAddress" name="jobAddress" className={`form-control ${formErrors.jobAddress ? 'is-invalid' : ''}`} onChange={handleChange} required />
+            {formErrors.jobAddress && <div className="invalid-feedback">{formErrors.jobAddress}</div>}
+          </div>
+          <div className="col-md-6 mb-3">
+            <label htmlFor="city" className="form-label">City</label>
+            <input type="text" id="city" name="city" className={`form-control ${formErrors.city ? 'is-invalid' : ''}`} onChange={handleChange} required />
+            {formErrors.city && <div className="invalid-feedback">{formErrors.city}</div>}
+          </div>
+          <div className="col-md-6 mb-3">
+            <label htmlFor="state" className="form-label">State</label>
+            <input type="text" id="state" name="state" className={`form-control ${formErrors.state ? 'is-invalid' : ''}`} onChange={handleChange} required />
+            {formErrors.state && <div className="invalid-feedback">{formErrors.state}</div>}
+          </div>
+        </div>
+
+        {/* Replaced two fields with one searchable dropdown */}
+        <div className="row">
+          <div className="col-md-12 mb-3">
+            <label htmlFor="hiringManager" className="form-label">Hiring Manager</label>
+            <div className="searchable-dropdown" ref={dropdownRef}>
+              <input
+                type="text"
+                id="hiringManager"
+                name="hiringManager"
+                className={`form-control ${formErrors.hiringManager ? 'is-invalid' : ''}`}
+                value={managerSearch}
+                onChange={(e) => {
+                  setManagerSearch(e.target.value);
+                  setIsDropdownOpen(true);
+                  // Clear selection if user types something new
+                  if (formData.hiringManagerId) {
+                    setFormData(prev => ({...prev, hiringManagerId: null}));
+                  }
+                }}
+                onFocus={() => setIsDropdownOpen(true)}
+                placeholder="Search for a manager..."
+                autoComplete="off"
+                required
+              />
+              {isDropdownOpen && (
+                <div className="dropdown-menu show">
+                  {filteredManagers.length > 0 ? (
+                    filteredManagers.map(manager => (
+                      <button
+                        key={manager.empId}
+                        type="button"
+                        className="dropdown-item"
+                        onClick={() => handleManagerSelect(manager)}
+                      >
+                        {`${manager.firstName} ${manager.lastName}`} ({manager.email})
+                      </button>
+                    ))
+                  ) : (
+                    <span className="dropdown-item-text">No managers found</span>
+                  )}
+                </div>
+              )}
+            </div>
+            {formErrors.hiringManager && <div className="invalid-feedback d-block">{formErrors.hiringManager}</div>}
+          </div>
+        </div>
+
+        <div className="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" className="btn btn-secondary" onClick={() => navigate('/jobs')}>Cancel</button>
+          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? 'Creating...' : 'Create Job'}
+          </button>
+        </div>
+      </form>
+
+      {/* 5. Conditionally render the popup */}
+      {isSuccessPopupOpen && successMessage && (
+        <SuccessPopup
+          message={successMessage}
+          onAcknowledge={handleAcknowledgeSuccess}
+          buttonText="OK"
+        />
+      )}
+    </>
   );
 };
 
