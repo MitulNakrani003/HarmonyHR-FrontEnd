@@ -13,7 +13,7 @@ const AddJobPage: React.FC = () => {
       </Link>
       <div className="card">
         <div className="card-body">
-          <h1 className="card-title text-center mb-4">Create New Job Posting</h1>
+          <h1 className="card-title text-center mb-4 page-heading">Create New Job Posting</h1>
           <AddJobForm />
         </div>
       </div>

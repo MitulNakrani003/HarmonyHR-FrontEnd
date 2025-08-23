@@ -1,0 +1,44 @@
+.add-job-form .form-label {
+  font-weight: 500;
+}
+
+.add-job-form .form-control {
+  border-color: #e0e0e0; /* Lighter gray for a thinner appearance */
+}
+
+.add-job-form .form-control:focus {
+  border-color: #26a69a;
+  box-shadow: 0 0 0 0.25rem rgba(38, 166, 154, 0.25);
+}
+
+.add-job-form .btn-primary {
+  background-color: #26a69a;
+  border-color: #26a69a;
+}
+
+.searchable-dropdown {
+  position: relative;
+}
+
+.searchable-dropdown .dropdown-menu {
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 0.25rem;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.searchable-dropdown .dropdown-item {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+.searchable-dropdown .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.searchable-dropdown .dropdown-item-text {
+  padding: 0.5rem 1rem;
+  color: #6c757d;
+}

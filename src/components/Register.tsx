@@ -91,7 +91,7 @@ function Register() {
 
   return (
     <>
-      {showSuccessPopup && <SuccessPopup message={message} onClose={handlePopupClose} />}
+      {showSuccessPopup && <SuccessPopup message={message} onAcknowledge={handlePopupClose} buttonText="Login" />}
       <div className="login-container">
         <img src={logo} alt="Harmony HR Logo" className="login-logo" />
         <h2 className="text-center mb-3">Create Your Account</h2>

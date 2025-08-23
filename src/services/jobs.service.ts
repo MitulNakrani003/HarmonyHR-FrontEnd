@@ -61,7 +61,22 @@ export interface NewJobPayload {
   city: string;
   state: string;
   hiringManagerId: number;
-  postedByUserId: number; // Renamed from postedById
+  postedByUserId: number;
+}
+
+// This will be the payload for the update request.
+export interface UpdateJobPayload {
+  jobTitle: string;
+  jobDescription: string;
+  departmentId: number;
+  minimumExperience: number;
+  maximumExperience: number;
+  compensation: number;
+  jobAddress: string;
+  city: string;
+  state: string;
+  hiringManagerId: number;
+  postedByUserId: number;
 }
 
 // New interface for Department data
@@ -96,7 +111,7 @@ const getAllJobs = (): Promise<AxiosResponse<Job[]>> => {
     });
 };
 
-// UPDATED: Fetches and transforms detailed data for a single job from the API
+// Fetches and transforms detailed data for a single job from the API
 const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
   return axios.get<ApiJobDetail>(`${API_URL}${id}`, { headers: AuthService.authHeader() })
     .then(response => {
@@ -120,7 +135,6 @@ const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
         departmentDescription: apiDetail.departmentDescription,
       };
 
-      // Return a new response object with the transformed data
       return {
         ...response,
         data: transformedJobDetail,
@@ -159,13 +173,33 @@ const deactivateJobsByIds = (jobIds: number[]): Promise<AxiosResponse<string>> =
   });
 };
 
+// NEW: Function to get a job's raw data for editing.
+const getJobForEdit = (id: number): Promise<AxiosResponse<UpdateJobPayload>> => {
+  return axios.get(`${API_URL}editform/${id}`, { headers: AuthService.authHeader() });
+};
+
+// New function to update a job
+const updateJob = (id: number, jobData: UpdateJobPayload): Promise<AxiosResponse<ApiJob>> => {
+  return axios.put(`${API_URL}update/${id}`, jobData, {
+    headers: AuthService.authHeader(),
+  });
+};
+
+
 const JobsService = {
+  //For All JoobsPage
   getAllJobs,
+  // For JobDetailPage
   getJobById,
+  // For AddJobPage
   addJob,
   getHiringManagers,
   getDepartments,
+  // For JobPage - Delete Jobs
   deleteJobsByIds: deactivateJobsByIds,
+  // For EditJobPage
+  getJobForEdit,
+  updateJob,
 };
 
 export default JobsService;

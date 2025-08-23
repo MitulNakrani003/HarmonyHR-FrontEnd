@@ -47,7 +47,7 @@ function JobsPage() {
 
   const handleEditJob = () => {
     if (selectedJobIds.length !== 1) return;
-    console.log('Editing job with ID:', selectedJobIds[0]);
+    navigate(`/jobs/edit/${selectedJobIds[0]}`); // Navigate to the edit page
   };
 
   // 3. This function now opens the popup instead of using window.confirm
@@ -114,7 +114,7 @@ function JobsPage() {
         />
         <div className="row">
           <div className="col-md-10 mx-auto">
-            <h1 className="mb-4 text-center">Current Openings</h1>
+            <h1 className="mb-4 text-center page-heading">Current Openings</h1>
             {renderContent()}
           </div>
         </div>

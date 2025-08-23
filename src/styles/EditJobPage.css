@@ -1,0 +1,18 @@
+/*  */
+
+.add-job-page-container {
+  max-width: 900px;
+}
+
+.add-job-page-container .card {
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.add-job-page-container .card-body {
+  padding: 2rem;
+}
+
+.page-heading {
+  font-weight: 700;
+}
