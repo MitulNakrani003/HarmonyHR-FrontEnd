@@ -1,7 +1,7 @@
 import React from 'react';
 import type { JobDetail } from '../../services/jobs.service';
 import '../../styles/JobInDetail.css';
-import { BsBuilding, BsGeoAlt, BsBriefcase, BsCashCoin, BsPerson, BsFillPersonVcardFill } from 'react-icons/bs';
+import { BsGeoAlt, BsBriefcase, BsCashCoin, BsPerson, BsFillPersonVcardFill } from 'react-icons/bs';
 
 interface JobInDetailProps {
   job: JobDetail;

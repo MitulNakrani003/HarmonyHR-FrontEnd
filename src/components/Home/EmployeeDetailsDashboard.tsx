@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import AuthService from '../../services/auth.service';
 import HomeService from '../../services/home.service';
 import '../../styles/EmployeeDetailsDashboard.css';

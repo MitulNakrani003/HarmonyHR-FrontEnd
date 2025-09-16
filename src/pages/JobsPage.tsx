@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import JobsService, { type Job } from '../services/jobs.service';
 import JobListingCard from '../components/Jobs/JobListingCard';

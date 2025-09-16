@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import JobsService, { type JobDetail } from '../services/jobs.service';
 import JobInDetail from '../components/Jobs/JobInDetail';
@@ -18,7 +18,7 @@ function JobDetailPage() {
           setJob(response.data);
           setIsLoading(false);
         })
-        .catch(err => {
+        .catch(_err => {
           setError('Failed to load job details.');
           setIsLoading(false);
         });
