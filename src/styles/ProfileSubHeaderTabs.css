@@ -1,0 +1,22 @@
+.profile-tabs-container .nav-tabs {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.profile-tabs-container .nav-link {
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #495057;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.profile-tabs-container .nav-link:hover {
+  border-bottom-color: #adb5bd;
+}
+
+.profile-tabs-container .nav-link.active {
+  color: #26a69a; /* Theme color */
+  border-bottom-color: #26a69a; /* Theme color */
+  background-color: transparent;
+}

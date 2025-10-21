@@ -1,9 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 import AuthService from './auth.service';
-
-const API_URL = 'http://localhost:8080/api/jobs/';
-
-// Interface for the raw job list from the API
+import { API_URLS } from '../constants/api';
 interface ApiJob {
   jobId: number;
   jobTitle: string;
@@ -95,7 +92,7 @@ export interface HiringManager {
 
 // Function to get all job listings (remains the same)
 const getAllJobs = (): Promise<AxiosResponse<Job[]>> => {
-  return axios.get<ApiJob[]>(API_URL, { headers: AuthService.authHeader() })
+  return axios.get<ApiJob[]>(API_URLS.JOBS_SERVICE_URL, { headers: AuthService.authHeader() })
     .then(response => {
       const transformedJobs: Job[] = response.data.map(apiJob => ({
         id: apiJob.jobId,
@@ -113,7 +110,7 @@ const getAllJobs = (): Promise<AxiosResponse<Job[]>> => {
 
 // Fetches and transforms detailed data for a single job from the API
 const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
-  return axios.get<ApiJobDetail>(`${API_URL}${id}`, { headers: AuthService.authHeader() })
+  return axios.get<ApiJobDetail>(`${API_URLS.JOBS_SERVICE_URL}${id}`, { headers: AuthService.authHeader() })
     .then(response => {
       const apiDetail = response.data;
 
@@ -127,7 +124,6 @@ const getJobById = (id: number): Promise<AxiosResponse<JobDetail>> => {
         minExperience: apiDetail.minimumExperience,
         maxExperience: apiDetail.maximumExperience,
         description: apiDetail.jobDescription,
-        // New detailed fields
         compensation: `$${apiDetail.compensation.toLocaleString()}`, // Format compensation as currency
         hiringManager: `${apiDetail.hiringManagerName} (${apiDetail.hiringManagerEmail})`,
         postedBy: `${apiDetail.postedByName} (${apiDetail.postedByEmail})`,
@@ -168,36 +164,31 @@ const getHiringManagers = (): Promise<AxiosResponse<HiringManager[]>> => {
 
 // Function to deactivate jobs by IDs
 const deactivateJobsByIds = (jobIds: number[]): Promise<AxiosResponse<string>> => {
-  return axios.put(`${API_URL}deactivate`, jobIds, {
+  return axios.put(`${API_URLS.JOBS_SERVICE_URL}deactivate`, jobIds, {
     headers: AuthService.authHeader(),
   });
 };
 
 // NEW: Function to get a job's raw data for editing.
 const getJobForEdit = (id: number): Promise<AxiosResponse<UpdateJobPayload>> => {
-  return axios.get(`${API_URL}editform/${id}`, { headers: AuthService.authHeader() });
+  return axios.get(`${API_URLS.JOBS_SERVICE_URL}editform/${id}`, { headers: AuthService.authHeader() });
 };
 
 // New function to update a job
 const updateJob = (id: number, jobData: UpdateJobPayload): Promise<AxiosResponse<ApiJob>> => {
-  return axios.put(`${API_URL}update/${id}`, jobData, {
+  return axios.put(`${API_URLS.JOBS_SERVICE_URL}update/${id}`, jobData, {
     headers: AuthService.authHeader(),
   });
 };
 
 
 const JobsService = {
-  //For All JoobsPage
   getAllJobs,
-  // For JobDetailPage
   getJobById,
-  // For AddJobPage
   addJob,
   getHiringManagers,
   getDepartments,
-  // For JobPage - Delete Jobs
   deleteJobsByIds: deactivateJobsByIds,
-  // For EditJobPage
   getJobForEdit,
   updateJob,
 };

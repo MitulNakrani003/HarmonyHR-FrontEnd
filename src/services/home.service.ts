@@ -1,10 +1,9 @@
 import axios from 'axios';
 import AuthService from './auth.service';
-
-const API_URL = 'http://localhost:8080/api/employee/';
+import { API_URLS } from '../constants/api';
 
 const getEmployeeDataByUserId = (userId: number) => {
-   return axios.get(API_URL + 'userid/' + userId, { headers: AuthService.authHeader() });
+  return axios.get(API_URLS.HOME_SERVICE_URL + 'userInfo/' + userId, { headers: AuthService.authHeader() });
 };
 
 const HomeService = {

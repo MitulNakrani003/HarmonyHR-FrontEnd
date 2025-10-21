@@ -2,12 +2,7 @@ import { useState, useEffect } from 'react';
 import AuthService from '../../services/auth.service';
 import HomeService from '../../services/home.service';
 import '../../styles/EmployeeDetailsDashboard.css';
-
-// Define an interface for the nested Address object
-interface Address {
-    addressId: number;
-    fullAddress: string;
-}
+import type { Address } from '../../interfaces/address';
 
 interface EmployeeData {
     empId: number;

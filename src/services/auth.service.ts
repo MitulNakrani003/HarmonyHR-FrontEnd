@@ -1,7 +1,5 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:8080/api/auth/';
-
+import { API_URLS } from '../constants/api';
 // Define an interface for the user object stored in localStorage
 interface User {
   token: string;
@@ -16,7 +14,7 @@ const register = (
   password: string,
   accessRights: string // Changed from string[]
 ) => {
-  return axios.post(API_URL + "signup", {
+  return axios.post(API_URLS.AUTH_SERVICE_URL + "signup", {
     username,
     email,
     password,
@@ -26,7 +24,7 @@ const register = (
 
 const login = (username: string, password: string) => {
   return axios
-    .post(API_URL + "signin", {
+    .post(API_URLS.AUTH_SERVICE_URL + "signin", {
       username,
       password
     })
@@ -40,7 +38,7 @@ const login = (username: string, password: string) => {
 };
 
 const getRoles = () => {
-  return axios.get(API_URL + "roles");
+  return axios.get(API_URLS.AUTH_SERVICE_URL + "roles");
 };
 
 const logout = () => {
